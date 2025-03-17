@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DFS & BFS Presentation</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="book">
+      <div class="page active" id="page1">
+        <h1>DFS & BFS Presentation</h1>
+        <h2>Prepared by:</h2>
+        <p>KAMAHORO Linda Kellia</p>
+        <p>NKERABAHIZI Love</p>
+        <div class="controls">
+          <button onclick="nextPage()">Next Page →</button>
+        </div>
+        <div class="page-number">1</div>
+      </div>
+
+      <div class="page" id="page2">
+        <h2>What is DFS?</h2>
+        <p>
+          Depth-First Search (DFS) is an algorithm for traversing or searching
+          tree or graph data structures. It starts at a selected node and
+          explores as far as possible along each branch before backtracking.
+        </p>
+        <h3>Key Characteristics:</h3>
+        <ul>
+          <li>Uses a stack (LIFO) data structure</li>
+          <li>Goes deep into the graph before backtracking</li>
+          <li>Memory efficient for deep graphs</li>
+          <li>Can be implemented recursively or iteratively</li>
+        </ul>
+        <div class="visualization">
+          <svg id="dfs-visualization" viewBox="0 0 400 200">
+            <!-- Nodes -->
+            <circle class="node" cx="200" cy="100" r="30" />
+            <circle class="node" cx="100" cy="150" r="30" />
+            <circle class="node" cx="300" cy="150" r="30" />
+            <circle class="node" cx="50" cy="200" r="30" />
+            <circle class="node" cx="150" cy="200" r="30" />
+            <circle class="node" cx="350" cy="200" r="30" />
+
+            <!-- Edges -->
+            <path class="edge" d="M200,100 L100,150" />
+            <path class="edge" d="M200,100 L300,150" />
+            <path class="edge" d="M100,150 L50,200" />
+            <path class="edge" d="M100,150 L150,200" />
+            <path class="edge" d="M300,150 L350,200" />
+
+            <!-- Labels -->
+            <text class="node-label" x="200" y="100">A</text>
+            <text class="node-label" x="100" y="150">B</text>
+            <text class="node-label" x="300" y="150">C</text>
+            <text class="node-label" x="50" y="200">D</text>
+            <text class="node-label" x="150" y="200">E</text>
+            <text class="node-label" x="350" y="200">F</text>
+          </svg>
+        </div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">2</div>
+      </div>
+
+      <div class="page" id="page3">
+        <h2>How DFS Works?</h2>
+        <p>
+          DFS explores as far as possible along a branch before backtracking.
+          Here's a step-by-step explanation:
+        </p>
+        <ol>
+          <li>Start at the root node</li>
+          <li>Visit an unvisited neighbor</li>
+          <li>Mark the node as visited</li>
+          <li>Repeat until no unvisited neighbors</li>
+          <li>Backtrack to previous node</li>
+        </ol>
+        <h3>C++ Implementation:</h3>
+        <pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;stack&gt;
+using namespace std;
+
+class Graph {
+private:
+    int V;
+    vector&lt;vector&lt;int&gt;&gt; adj;
+    vector&lt;bool&gt; visited;
+
+public:
+    Graph(int vertices) : V(vertices) {
+        adj.resize(vertices);
+        visited.resize(vertices, false);
+    }
+
+    void addEdge(int v, int w) {
+        adj[v].push_back(w);
+    }
+
+    void DFS(int start) {
+        stack&lt;int&gt; s;
+        s.push(start);
+        
+        while (!s.empty()) {
+            int v = s.top();
+            s.pop();
+            
+            if (!visited[v]) {
+                visited[v] = true;
+                cout &lt;&lt; v &lt;&lt; " ";
+                
+                for (int i = adj[v].size() - 1; i >= 0; i--) {
+                    int neighbor = adj[v][i];
+                    if (!visited[neighbor]) {
+                        s.push(neighbor);
+                    }
+                }
+            }
+        }
+    }
+};
+
+int main() {
+    Graph g(6);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 3);
+    g.addEdge(1, 4);
+    g.addEdge(2, 5);
+    g.addEdge(4, 5);
+    
+    cout &lt;&lt; "DFS starting from vertex 0: ";
+    g.DFS(0);
+    return 0;
+}
+        </pre>
+        <button onclick="runDFS()">Run DFS</button>
+        <div id="dfsOutput" class="output"></div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">3</div>
+      </div>
+
+      <div class="page" id="page4">
+        <h2>What is BFS?</h2>
+        <p>
+          Breadth-First Search (BFS) is an algorithm for traversing or searching
+          tree or graph data structures. It explores all nodes at the present
+          depth before moving to nodes at the next depth level.
+        </p>
+        <h3>Key Characteristics:</h3>
+        <ul>
+          <li>Uses a queue (FIFO) data structure</li>
+          <li>Explores level by level</li>
+          <li>Guarantees shortest path in unweighted graphs</li>
+          <li>Requires more memory than DFS for wide graphs</li>
+        </ul>
+        <div class="visualization">
+          <svg id="bfs-visualization" viewBox="0 0 400 200">
+            <!-- Nodes -->
+            <circle class="node" cx="200" cy="100" r="30" />
+            <circle class="node" cx="100" cy="150" r="30" />
+            <circle class="node" cx="300" cy="150" r="30" />
+            <circle class="node" cx="50" cy="200" r="30" />
+            <circle class="node" cx="150" cy="200" r="30" />
+            <circle class="node" cx="350" cy="200" r="30" />
+
+            <!-- Edges -->
+            <path class="edge" d="M200,100 L100,150" />
+            <path class="edge" d="M200,100 L300,150" />
+            <path class="edge" d="M100,150 L50,200" />
+            <path class="edge" d="M100,150 L150,200" />
+            <path class="edge" d="M300,150 L350,200" />
+
+            <!-- Labels -->
+            <text class="node-label" x="200" y="100">A</text>
+            <text class="node-label" x="100" y="150">B</text>
+            <text class="node-label" x="300" y="150">C</text>
+            <text class="node-label" x="50" y="200">D</text>
+            <text class="node-label" x="150" y="200">E</text>
+            <text class="node-label" x="350" y="200">F</text>
+          </svg>
+        </div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">4</div>
+      </div>
+
+      <div class="page" id="page5">
+        <h2>How BFS Works?</h2>
+        <p>
+          BFS explores all neighbors at the present depth before moving deeper.
+          Here's how it works:
+        </p>
+        <ol>
+          <li>Start at the root node</li>
+          <li>Visit all neighbors of the current node</li>
+          <li>Mark nodes as visited</li>
+          <li>Move to next level</li>
+          <li>Repeat until all nodes are visited</li>
+        </ol>
+        <h3>C++ Implementation:</h3>
+        <pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;queue&gt;
+using namespace std;
+
+class Graph {
+private:
+    int V;
+    vector&lt;vector&lt;int&gt;&gt; adj;
+    vector&lt;bool&gt; visited;
+
+public:
+    Graph(int vertices) : V(vertices) {
+        adj.resize(vertices);
+        visited.resize(vertices, false);
+    }
+
+    void addEdge(int v, int w) {
+        adj[v].push_back(w);
+    }
+
+    void BFS(int start) {
+        queue&lt;int&gt; q;
+        q.push(start);
+        visited[start] = true;
+        
+        while (!q.empty()) {
+            int v = q.front();
+            q.pop();
+            cout &lt;&lt; v &lt;&lt; " ";
+            
+            for (int neighbor : adj[v]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    q.push(neighbor);
+                }
+            }
+        }
+    }
+};
+
+int main() {
+    Graph g(6);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 3);
+    g.addEdge(1, 4);
+    g.addEdge(2, 5);
+    g.addEdge(4, 5);
+    
+    cout &lt;&lt; "BFS starting from vertex 0: ";
+    g.BFS(0);
+    return 0;
+}
+        </pre>
+        <button onclick="runBFS()">Run BFS</button>
+        <div id="bfsOutput" class="output"></div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">5</div>
+      </div>
+
+      <div class="page" id="page6">
+        <h2>DFS vs BFS</h2>
+        <h3>Comparison Table:</h3>
+        <table>
+          <tr>
+            <th>Feature</th>
+            <th>DFS</th>
+            <th>BFS</th>
+          </tr>
+          <tr>
+            <td>Data Structure</td>
+            <td>Stack</td>
+            <td>Queue</td>
+          </tr>
+          <tr>
+            <td>Memory Usage</td>
+            <td>O(h)</td>
+            <td>O(w)</td>
+          </tr>
+          <tr>
+            <td>Path Finding</td>
+            <td>May not find shortest path</td>
+            <td>Guarantees shortest path</td>
+          </tr>
+          <tr>
+            <td>Best For</td>
+            <td>Deep graphs</td>
+            <td>Wide graphs</td>
+          </tr>
+        </table>
+        <div class="visualization">
+          <svg id="comparison-visualization" viewBox="0 0 400 200">
+            <!-- DFS Path -->
+            <path
+              class="edge"
+              d="M50,100 L150,100 L250,100 L350,100"
+              stroke="#1a237e"
+              stroke-dasharray="5,5"
+            />
+            <text x="200" y="80" text-anchor="middle" fill="#1a237e">
+              DFS Path
+            </text>
+
+            <!-- BFS Path -->
+            <path
+              class="edge"
+              d="M50,150 L150,150 L250,150 L350,150"
+              stroke="#283593"
+            />
+            <text x="200" y="180" text-anchor="middle" fill="#283593">
+              BFS Path
+            </text>
+          </svg>
+        </div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">6</div>
+      </div>
+
+      <div class="page" id="page7">
+        <h2>When to use DFS?</h2>
+        <h3>Common Applications:</h3>
+        <ul>
+          <li>
+            <strong>Path Finding:</strong> Finding a path between two nodes
+          </li>
+          <li>
+            <strong>Maze Solving:</strong> Exploring all possible paths in a
+            maze
+          </li>
+          <li>
+            <strong>Topological Sorting:</strong> Ordering nodes in a directed
+            acyclic graph
+          </li>
+          <li><strong>Cycle Detection:</strong> Finding cycles in a graph</li>
+          <li><strong>Game Trees:</strong> Exploring game states in AI</li>
+        </ul>
+        <h3>C++ Example: Maze Solving</h3>
+        <pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+class Maze {
+private:
+    vector&lt;vector&lt;char&gt;&gt; maze;
+    int rows, cols;
+    
+    bool isValid(int x, int y) {
+        return x >= 0 && x < rows && y >= 0 && y < cols && maze[x][y] == '.';
+    }
+    
+    bool solveDFS(int x, int y) {
+        if (maze[x][y] == 'E') return true;
+        
+        maze[x][y] = 'X';
+        
+        int dx[] = {-1, 1, 0, 0};
+        int dy[] = {0, 0, -1, 1};
+        
+        for (int i = 0; i < 4; i++) {
+            int newX = x + dx[i];
+            int newY = y + dy[i];
+            
+            if (isValid(newX, newY) && solveDFS(newX, newY)) {
+                return true;
+            }
+        }
+        
+        maze[x][y] = '.';
+        return false;
+    }
+
+public:
+    Maze(vector&lt;vector&lt;char&gt;&gt; m) : maze(m), rows(m.size()), cols(m[0].size()) {}
+    
+    bool solve() {
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (maze[i][j] == 'S') {
+                    return solveDFS(i, j);
+                }
+            }
+        }
+        return false;
+    }
+};
+        </pre>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">7</div>
+      </div>
+
+      <div class="page" id="page8">
+        <h2>When to use BFS?</h2>
+        <h3>Common Applications:</h3>
+        <ul>
+          <li>
+            <strong>Shortest Path:</strong> Finding shortest path in unweighted
+            graphs
+          </li>
+          <li>
+            <strong>Web Crawling:</strong> Crawling web pages level by level
+          </li>
+          <li>
+            <strong>Social Networks:</strong> Finding connections within k
+            degrees
+          </li>
+          <li><strong>GPS Navigation:</strong> Finding shortest routes</li>
+          <li>
+            <strong>P2P Networks:</strong> Finding nodes at minimum distance
+          </li>
+        </ul>
+        <h3>C++ Example: Shortest Path</h3>
+        <pre>
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;queue&gt;
+using namespace std;
+
+class Graph {
+private:
+    int V;
+    vector&lt;vector&lt;int&gt;&gt; adj;
+    vector&lt;int&gt; dist;
+    
+    void BFS(int start) {
+        queue&lt;int&gt; q;
+        q.push(start);
+        dist[start] = 0;
+        
+        while (!q.empty()) {
+            int v = q.front();
+            q.pop();
+            
+            for (int neighbor : adj[v]) {
+                if (dist[neighbor] == -1) {
+                    dist[neighbor] = dist[v] + 1;
+                    q.push(neighbor);
+                }
+            }
+        }
+    }
+
+public:
+    Graph(int vertices) : V(vertices) {
+        adj.resize(vertices);
+        dist.resize(vertices, -1);
+    }
+    
+    void addEdge(int v, int w) {
+        adj[v].push_back(w);
+    }
+    
+    vector&lt;int&gt; shortestPath(int start) {
+        BFS(start);
+        return dist;
+    }
+};
+        </pre>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">8</div>
+      </div>
+
+      <div class="page" id="page9">
+        <h2>Real-Life Applications</h2>
+        <h3>DFS Applications:</h3>
+        <ul>
+          <li>
+            <strong>AI and Machine Learning:</strong> Training neural networks
+          </li>
+          <li><strong>File Systems:</strong> Directory traversal</li>
+          <li><strong>Compiler Design:</strong> Syntax tree traversal</li>
+          <li><strong>Game Development:</strong> Path finding in games</li>
+        </ul>
+        <h3>BFS Applications:</h3>
+        <ul>
+          <li><strong>GPS Navigation:</strong> Finding shortest routes</li>
+          <li><strong>Social Networks:</strong> Friend suggestions</li>
+          <li><strong>Web Crawling:</strong> Search engine indexing</li>
+          <li><strong>Network Broadcasting:</strong> Message propagation</li>
+        </ul>
+        <div class="visualization">
+          <svg id="applications-visualization" viewBox="0 0 400 200">
+            <!-- DFS Applications -->
+            <g transform="translate(50,50)">
+              <circle class="node" cx="0" cy="0" r="20" />
+              <text class="node-label" x="0" y="0">AI</text>
+              <circle class="node" cx="100" cy="0" r="20" />
+              <text class="node-label" x="100" y="0">ML</text>
+              <path class="edge" d="M20,0 L80,0" />
+            </g>
+
+            <!-- BFS Applications -->
+            <g transform="translate(50,150)">
+              <circle class="node" cx="0" cy="0" r="20" />
+              <text class="node-label" x="0" y="0">GPS</text>
+              <circle class="node" cx="100" cy="0" r="20" />
+              <text class="node-label" x="100" y="0">Social</text>
+              <path class="edge" d="M20,0 L80,0" />
+            </g>
+          </svg>
+        </div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">9</div>
+      </div>
+
+      <div class="page" id="page10">
+        <h2>Quiz Time!</h2>
+        <div class="quiz">
+          <div class="question">
+            <p>1. Which data structure is used in DFS?</p>
+            <div class="options">
+              <button onclick="checkAnswer(1, 'stack')">Stack</button>
+              <button onclick="checkAnswer(1, 'queue')">Queue</button>
+              <button onclick="checkAnswer(1, 'array')">Array</button>
+              <button onclick="checkAnswer(1, 'linkedlist')">
+                Linked List
+              </button>
+            </div>
+          </div>
+          <div class="question">
+            <p>2. What is the time complexity of BFS?</p>
+            <div class="options">
+              <button onclick="checkAnswer(2, 'O(V+E)')">O(V+E)</button>
+              <button onclick="checkAnswer(2, 'O(V)')">O(V)</button>
+              <button onclick="checkAnswer(2, 'O(E)')">O(E)</button>
+              <button onclick="checkAnswer(2, 'O(V*E)')">O(V*E)</button>
+            </div>
+          </div>
+          <div class="question">
+            <p>
+              3. Which algorithm guarantees the shortest path in an unweighted
+              graph?
+            </p>
+            <div class="options">
+              <button onclick="checkAnswer(3, 'BFS')">BFS</button>
+              <button onclick="checkAnswer(3, 'DFS')">DFS</button>
+              <button onclick="checkAnswer(3, 'both')">Both</button>
+              <button onclick="checkAnswer(3, 'neither')">Neither</button>
+            </div>
+          </div>
+        </div>
+        <div id="quizResult"></div>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+          <button onclick="nextPage()">Next →</button>
+        </div>
+        <div class="page-number">10</div>
+      </div>
+
+      <div class="page" id="page11">
+        <h2>Conclusion</h2>
+        <p>
+          Both DFS and BFS are powerful algorithms for searching and traversing
+          graphs, each with its own strengths and use cases:
+        </p>
+        <ul>
+          <li>DFS is memory efficient and great for deep graphs</li>
+          <li>BFS guarantees shortest paths and is ideal for wide graphs</li>
+          <li>Both algorithms have O(V+E) time complexity</li>
+          <li>Choice between them depends on the specific problem</li>
+        </ul>
+        <h3>Thank you for reading!</h3>
+        <p>
+          We hope this presentation helped you understand DFS and BFS better!
+        </p>
+        <div class="controls">
+          <button onclick="prevPage()">← Previous</button>
+        </div>
+        <div class="page-number">11</div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
